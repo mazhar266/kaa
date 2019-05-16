@@ -14,8 +14,18 @@
 # limitations under the License.
 #
 FROM openjdk:8u212-jre-stretch
-MAINTAINER KAA IoT PLATFORM <www.kaaproject.org>
+LABEL maintainer="KAA IoT PLATFORM <www.kaaproject.org>"
 ENV DEBIAN_FRONTEND noninteractive
+
+# installed needed packages
+RUN apt-get update && apt-get -yqq install \
+		software-properties-common \
+		ca-certificates \
+		netcat \
+		nano \
+		net-tools \
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/*
 
 # Copy compiled/downloaded Kaa .DEB file and install
 ARG setupfile
@@ -31,5 +41,10 @@ RUN touch /var/log/kaa/kaa-node.log \
 COPY kaa/ /kaa
 
 EXPOSE 9090
+EXPOSE 8080
+EXPOSE 10088
+EXPOSE 10089
+EXPOSE 10097
+EXPOSE 10099
 
 ENTRYPOINT ["/kaa/docker-entry.sh"]
